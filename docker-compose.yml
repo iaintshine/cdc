@@ -1,0 +1,65 @@
+kafka:
+  image: spotify/kafka
+  ports:
+    - "2181:2181"
+    - "9092:9092"
+  environment:
+    ADVERTISED_PORT: 9092
+    ADVERTISED_HOST: 
+maxwell:
+  image: iaintshine/maxwell
+  environment:
+    MYSQL_HOST:
+    MYSQL_PORT:
+    MYSQL_USER:
+    MYSQL_PASSWORD:
+    KAFKA_HOST: kafka 
+    KAFKA_PORT: 9092
+    LOG_LEVEL: INFO
+  links:
+    - kafka:kafka
+elasticsearch:
+  image: elasticsearch
+  ports: 
+    - "9200:9200"
+    - "9300:9300"
+kibana:
+  image: kibana
+  ports:
+    - "5601:5601"
+  links:
+    - elasticsearch:elasticsearch
+zookeeper:
+  image: wurstmeister/zookeeper
+  ports: 
+    - "49181:2181"
+    - "22"
+nimbus:
+  image: wurstmeister/storm-nimbus
+  ports:
+    - "49773:3773"
+    - "49772:3772"
+    - "49627:6627"
+    - "22"
+  links: 
+    - zookeeper:zk
+    - kafka:kafka
+    - elasticsearch:elasticsearch
+supervisor:
+  image: wurstmeister/storm-supervisor
+  ports:
+    - "8000:8000"
+    - "22"
+  links: 
+    - nimbus:nimbus
+    - zookeeper:zk
+    - kafka:kafka
+    - elasticsearch:elasticsearch
+ui:
+  image: wurstmeister/storm-ui
+  ports:
+    - "49080:8080"
+    - "22"
+  links: 
+    - nimbus:nimbus
+    - zookeeper:zk
