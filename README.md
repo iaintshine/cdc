@@ -1,5 +1,5 @@
 # CDC (Change Data Capture) 
-Change Data Capture platform example using MySQL, Maxwell, Storm and Elasticsearch.
+Change Data Capture platform example using MySQL, Maxwell, Kafka, Storm and Elasticsearch.
 
 
 ## Environment Setup
